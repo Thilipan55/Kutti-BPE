@@ -1,7 +1,10 @@
 from collections import defaultdict
 import json
 
-class Tokenizer():
+with open("D:\GPT\dataset\shakespear.txt","r", encoding='utf-8') as f:
+    corpus = f.read()
+
+class Kuttibpe():
     def __init__(self, corpus, mint_toks):
         self.merges = {}
         self.vocab = {i: bytes([i]) for i in range(256)}
@@ -54,7 +57,7 @@ class Tokenizer():
         bytestr = stringst.encode('utf-8')
         token = list(map(int, bytestr))
 
-        while len(token > 1):
+        while len(token) > 1:
             count = self.get_merges(token)
             min_pair = min(count, key = lambda p: self.merges[p] if p in self.merges else float('inf'))
             if min_pair not in self.merges:
@@ -67,7 +70,7 @@ class Tokenizer():
     def decode(self, bytestream):
         raw = b''.join([self.vocab[i] for i in bytestream])
         return raw.decode('utf-8')
-    
+  
     def save(self, path, name):
         state={
                 f"{name} merges": {f"{p0},{p1}": tok for (p0, p1), tok in self.merges.items()}
@@ -77,7 +80,35 @@ class Tokenizer():
 
         print(f"saved merges dict in {path}")
 
-    
+
+    def load_pretrained(self, name, path):
+        with open(path, "r") as f:
+            states = json.load(f)
+        
+        key = f"{name} merges"
+        for i in states:
+            if i == key:
+                print(f"{name} found")
+            else:
+                print("pretrained model not found")
+
+        self.merges = states[key]
+        load_dict = defaultdict(int)
+        for pair,tok in self.merges.items():
+            p0, p1 = map(int,pair.split(','))
+            load_dict[(p0,p1)] = tok
+
+        vocabpre = {i: bytes([i]) for i in range(256)}
+        for (p0, p1), tok in load_dict.items():
+            vocabpre[tok] = vocabpre[p0] + vocabpre[p1]
+
+        self.vocab = vocabpre
+        self.merges = load_dict 
 
 
-    
+tokenizer = Kuttibpe(corpus, 3000)
+tokenizer.train()
+tokenizer.build_vocab()
+
+out_dir = "D:\GPT\dataset\shakespear.json"
+tokenizer.save(out_dir, "shakespear")
