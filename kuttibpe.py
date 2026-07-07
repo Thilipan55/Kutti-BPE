@@ -56,6 +56,7 @@ class Tokenizer():
 
         while len(token > 1):
             count = self.get_merges(token)
+            min_pair = min(count, key = lambda p: self.merges[p] if p in self.merges else float('inf'))
             if min_pair not in self.merges:
                 break
             tokmint = self.merges[min_pair]
