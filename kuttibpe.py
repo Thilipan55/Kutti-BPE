@@ -1,9 +1,6 @@
 from collections import defaultdict
 import json
 
-with open("D:\GPT\dataset\shakespear.txt","r", encoding='utf-8') as f:
-    corpus = f.read()
-
 class Kuttibpe():
     def __init__(self, corpus, mint_toks):
         self.merges = {}
@@ -52,7 +49,7 @@ class Kuttibpe():
             self.vocab[token] = self.vocab[p0] + self.vocab[p1]
         
         print("vocab built with the merges")
-    
+        
     def encode(self, stringst):
         bytestr = stringst.encode('utf-8')
         token = list(map(int, bytestr))
@@ -103,12 +100,5 @@ class Kuttibpe():
             vocabpre[tok] = vocabpre[p0] + vocabpre[p1]
 
         self.vocab = vocabpre
-        self.merges = load_dict 
+        self.merges = load_dict
 
-
-tokenizer = Kuttibpe(corpus, 3000)
-tokenizer.train()
-tokenizer.build_vocab()
-
-out_dir = "D:\GPT\dataset\shakespear.json"
-tokenizer.save(out_dir, "shakespear")
