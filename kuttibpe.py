@@ -1,7 +1,7 @@
 from collections import defaultdict
 import json
 
-class Kuttibpe():
+class KuttiBPE():
     def __init__(self, corpus, mint_toks):
         self.merges = {}
         self.vocab = {i: bytes([i]) for i in range(256)}
