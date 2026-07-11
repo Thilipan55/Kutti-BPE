@@ -1,4 +1,10 @@
 # Kutti-BPE
+---
+Download from:
+```bash
+!git clone https://github.com/Thilipan55/Kutti-BPE.git
+```
+
 
 There are 256 “foundational tokens” which are just vocab[i] = bytes(i) so the BPE training loop to make the dictionary looped the dataset over and minted 4500 new tokens so adding with foundation tokens of 256 → 4756
 
